@@ -3,7 +3,6 @@ package com.example.taskfourkfd.controller
 import com.example.taskfourkfd.repository.model.Transactions
 import com.example.taskfourkfd.repository.model.Users
 import com.example.taskfourkfd.service.UserService
-import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
