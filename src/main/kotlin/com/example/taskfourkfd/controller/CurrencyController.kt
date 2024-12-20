@@ -12,8 +12,8 @@ class CurrencyController (private val currencyService: CurrencyService) {
     fun getAllCurrencies(): List<Currency> = currencyService.getAllCurrencies()
 
     @GetMapping("/{currencyId}")
-    fun getCurrencyById(@PathVariable currencyId: Long): Currency? =
-        currencyService.getCurrencyById(currencyId)
+    fun getCurrencyById(@PathVariable currencyName: String): Currency? =
+        currencyService.getCurrencyById(currencyName)
 
     @PostMapping
     fun createCurrency(@RequestBody currency: Currency): Currency =
@@ -22,5 +22,6 @@ class CurrencyController (private val currencyService: CurrencyService) {
     @PostMapping("/list")
     fun createListCurrencies(@RequestBody listCurrency: List<Currency>): List<Currency> =
         currencyService.createListCurrency(listCurrency)
+
 
 }

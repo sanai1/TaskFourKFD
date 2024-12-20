@@ -1,5 +1,6 @@
 package com.example.taskfourkfd.service
 
+import com.example.taskfourkfd.repository.dao.CurrencyDao
 import com.example.taskfourkfd.repository.dao.TransactionsDao
 import com.example.taskfourkfd.repository.dao.UsersDao
 import com.example.taskfourkfd.repository.model.Users
@@ -9,26 +10,32 @@ import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
-class UserService (private val usersRepository: UsersDao, private val transactionsDao: TransactionsDao) {
+class UserService (
+    private val usersDao: UsersDao,
+    private val transactionsDao: TransactionsDao,
+    private val currencyDao: CurrencyDao) {
 
-    fun findAllUsers(): List<Users> = usersRepository.findAll()
+    fun findAllUsers(): List<Users> = usersDao.findAll()
 
-    fun getUserById(userId: UUID): Users? = usersRepository.findByIdOrNull(userId)
+    fun getUserById(userId: UUID): Users? = usersDao.findByIdOrNull(userId)
 
-    fun createUser(user: Users): Users = usersRepository.save(user)
+    fun createUser(user: Users): Users = usersDao.save(user)
 
     fun createTransaction(viewTransactions: ViewTransactions): ViewTransactions? {
-        val user = usersRepository.findByIdOrNull(viewTransactions.user_uid)
-        return if (user != null) {
-            transactionsDao.save(
-                viewTransactions.toTransaction(user)
+        val user = usersDao.findByIdOrNull(viewTransactions.user_uid)
+        val currencyOne = currencyDao.findByIdOrNull(viewTransactions.currency_one)
+        val currencyTwo = currencyDao.findByIdOrNull(viewTransactions.currency_two)
+        return if (user != null && currencyOne != null && currencyTwo != null) {
+            val transaction = transactionsDao.save(
+                viewTransactions.toTransaction(user, currencyOne, currencyTwo)
             )
+            viewTransactions.id = transaction.id
             viewTransactions
         } else null
     }
 
     fun getUserTransactions(userId: UUID): List<ViewTransactions> {
-        val user = usersRepository.findById(userId).orElse(null)
+        val user = usersDao.findById(userId).orElse(null)
         return if (user != null) {
             val listPseudoTransactions: MutableList<ViewTransactions> = emptyList<ViewTransactions>().toMutableList()
             transactionsDao.findByUser(user).forEach { listPseudoTransactions.add(it.fromTransaction()) }

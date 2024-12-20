@@ -6,10 +6,6 @@ import jakarta.persistence.*
 @Table
 data class Currency(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long = 0L,
-
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     val name: String
-
 )

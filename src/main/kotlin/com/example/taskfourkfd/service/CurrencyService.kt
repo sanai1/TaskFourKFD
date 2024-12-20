@@ -10,7 +10,7 @@ class CurrencyService (private val currencyDao: CurrencyDao) {
 
     fun getAllCurrencies(): List<Currency> = currencyDao.findAll()
 
-    fun getCurrencyById(currencyId: Long): Currency? = currencyDao.findByIdOrNull(currencyId)
+    fun getCurrencyById(currencyName: String): Currency? = currencyDao.findByIdOrNull(currencyName)
 
     fun createCurrency(currency: Currency): Currency = currencyDao.save(currency)
 
