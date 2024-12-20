@@ -1,5 +1,6 @@
 package com.example.taskfourkfd.repository.model
 
+import com.example.taskfourkfd.repository.model.view.ViewTransactions
 import jakarta.persistence.*
 
 @Entity
@@ -20,4 +21,12 @@ data class Transactions(
     @Column(nullable = false)
     val purchase: Long,
 
-)
+) {
+    fun fromTransaction(): ViewTransactions =
+        ViewTransactions(
+            id = id,
+            user_uid = user.uid,
+            sale = sale,
+            purchase = purchase
+        )
+}

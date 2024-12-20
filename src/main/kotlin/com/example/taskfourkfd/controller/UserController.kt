@@ -1,8 +1,9 @@
 package com.example.taskfourkfd.controller
 
-import com.example.taskfourkfd.repository.model.Transactions
 import com.example.taskfourkfd.repository.model.Users
+import com.example.taskfourkfd.repository.model.view.ViewTransactions
 import com.example.taskfourkfd.service.UserService
+import jakarta.websocket.server.PathParam
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
@@ -17,16 +18,13 @@ class UserController (private val userService: UserService) {
     fun getUserById(@PathVariable("user_id") userId: UUID): Users? =
         userService.getUserById(userId)
 
-    @GetMapping("/{user_id}/transactions")
-    fun getTransactions(@PathVariable("user_id") userId: UUID):  List<Transactions> =
+    @GetMapping("/transactions")
+    fun getTransactions(@PathParam("user_id") userId: UUID):  List<ViewTransactions> =
         userService.getUserTransactions(userId)
 
-    @PostMapping("/{user_id}/transactions")
-    fun createUserTransaction(
-        @PathVariable("user_id") userId: UUID,
-        @RequestParam sale: Long,
-        @RequestParam purchase: Long)
-        : Transactions? = userService.createTransaction(userId, sale, purchase)
+    @PostMapping("/transactions")
+    fun createUserTransaction(@RequestBody viewTransactions: ViewTransactions): ViewTransactions? =
+        userService.createTransaction(viewTransactions)
 
     @PostMapping
     fun createUser(@RequestBody user: Users): Users = userService.createUser(user)
